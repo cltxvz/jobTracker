@@ -32,12 +32,13 @@ router.post("/register", async (req, res) => {
     // Create JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server Error");
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
+
 
 // LOGIN
 router.post("/login", async (req, res) => {
@@ -50,21 +51,34 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Compare password
+    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Generate JWT token
+    // Create JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
+// EXPORT
+module.exports = router;
+
+const auth = require("../middleware/auth");
+
+router.get("/user", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
   }
 });
-
-// EXPORT
-module.exports = router;
