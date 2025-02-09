@@ -5,6 +5,9 @@ import App from "./App";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import AddJob from "./pages/AddJob";
+import EditJob from "./pages/EditJob";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,6 +17,8 @@ root.render(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/add-job" element={<AddJob />} />
+      <Route path="/edit-job/:id" element={<EditJob />} />
     </Routes>
   </Router>
 );
