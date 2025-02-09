@@ -3,11 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
+  const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchJobs = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
         navigate("/login");
@@ -15,28 +15,29 @@ function Dashboard() {
       }
 
       try {
-        const res = await axios.get("http://localhost:5001/api/auth/user", {
+        const res = await axios.get("http://localhost:5001/api/jobs", {
           headers: { "x-auth-token": token },
         });
-        setUser(res.data);
+        setJobs(res.data);
       } catch (error) {
-        localStorage.removeItem("token");
+        console.error(error);
         navigate("/login");
       }
     };
 
-    fetchUser();
+    fetchJobs();
   }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
 
   return (
     <div>
-      <h2>Welcome, {user?.name}</h2>
-      <button onClick={handleLogout}>Logout</button>
+      <h2>My Job Applications</h2>
+      <ul>
+        {jobs.map((job) => (
+          <li key={job._id}>
+            {job.company} - {job.position} ({job.status})
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
