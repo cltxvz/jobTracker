@@ -24,7 +24,7 @@ function Dashboard() {
       }
 
       try {
-        const res = await axios.get("http://localhost:5001/api/jobs", {
+        const res = await axios.get("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs", {
           headers: { "x-auth-token": token },
         });
         setJobs(res.data);
@@ -52,7 +52,7 @@ function Dashboard() {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5001/api/jobs/${id}`, {
+      await axios.delete(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs${id}`, {
         headers: { "x-auth-token": token },
       });
       setJobs(jobs.filter((job) => job._id !== id));

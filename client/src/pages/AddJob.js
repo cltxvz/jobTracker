@@ -20,7 +20,7 @@ function AddJob() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5001/api/jobs",
+        "https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs",
         { company, position, jobLink, portalLink, username, password, status },
         { headers: { "x-auth-token": token } }
       );

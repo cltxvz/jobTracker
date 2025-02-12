@@ -14,7 +14,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/register", { name, email, password });
+      const res = await axios.post("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/auth/register", { name, email, password });
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (error) {

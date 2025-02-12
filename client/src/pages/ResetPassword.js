@@ -11,7 +11,7 @@ function ResetPassword() {
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://localhost:5001/api/password/reset-password/${token}`, { newPassword });
+      const res = await axios.post(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/password/reset-password${token}`, { newPassword });
       setMessage(res.data.msg);
       setTimeout(() => navigate("/login"), 3000);
     } catch (error) {

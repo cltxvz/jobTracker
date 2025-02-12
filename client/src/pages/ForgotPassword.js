@@ -8,7 +8,7 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/api/password/forgot-password", { email });
+      const res = await axios.post("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/password/forgot-password", { email });
       setMessage(res.data.msg);
     } catch (error) {
       setMessage("Error sending reset link. Please try again.");
