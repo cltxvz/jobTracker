@@ -8,6 +8,8 @@ function AddJob() {
   const [position, setPosition] = useState("");
   const [jobLink, setJobLink] = useState("");
   const [portalLink, setPortalLink] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState("Applied");
 
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ function AddJob() {
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:5001/api/jobs",
-        { company, position, jobLink, portalLink, status },
+        { company, position, jobLink, portalLink, username, password, status },
         { headers: { "x-auth-token": token } }
       );
       alert("Job added successfully!");
@@ -42,21 +44,31 @@ function AddJob() {
           <input type="text" className="form-control" value={position} onChange={(e) => setPosition(e.target.value)} required />
         </div>
         <div className="mb-3">
-          <label className="form-label">Job Link</label>
+          <label className="form-label">Job Link (Optional)</label>
           <input type="url" className="form-control" value={jobLink} onChange={(e) => setJobLink(e.target.value)} />
         </div>
         <div className="mb-3">
-          <label className="form-label">Portal Link</label>
+          <label className="form-label">Portal Link (Optional)</label>
           <input type="url" className="form-control" value={portalLink} onChange={(e) => setPortalLink(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Username (Optional)</label>
+          <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Password (Optional)</label>
+          <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <div className="mb-3">
           <label className="form-label">Application Status</label>
           <select className="form-select" value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="Pending">Pending</option>
             <option value="Applied">Applied</option>
+            <option value="Assessment Pending">Assessment Pending</option>
+            <option value="Assessment Completed">Assessment Completed</option>
             <option value="Interviewing">Interviewing</option>
             <option value="Offer">Offer</option>
             <option value="Rejected">Rejected</option>
-            <option value="Pending">Pending</option>
           </select>
         </div>
         <button type="submit" className="btn btn-success">Submit</button>

@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Dashboard() {
   const [jobs, setJobs] = useState([]);
+  const [showPasswords, setShowPasswords] = useState({}); // Object to track password visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +29,14 @@ function Dashboard() {
 
     fetchJobs();
   }, [navigate]);
+
+  // Toggle Password Visibility
+  const togglePasswordVisibility = (jobId) => {
+    setShowPasswords((prev) => ({
+      ...prev,
+      [jobId]: !prev[jobId],
+    }));
+  };
 
   // DELETE Job Function
   const handleDelete = async (id) => {
@@ -68,6 +77,9 @@ function Dashboard() {
               <th>Position</th>
               <th>Status</th>
               <th>Job Link</th>
+              <th>Portal Link</th>
+              <th>Username</th>
+              <th>Password</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -86,6 +98,36 @@ function Dashboard() {
                     <a href={job.jobLink} target="_blank" rel="noopener noreferrer" className="btn btn-info btn-sm">
                       View Job
                     </a>
+                  ) : (
+                    "N/A"
+                  )}
+                </td>
+                <td>
+                  {job.portalLink ? (
+                    <a href={job.portalLink} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
+                      Access Portal
+                    </a>
+                  ) : (
+                    "N/A"
+                  )}
+                </td>
+                <td>{job.username ? job.username : "N/A"}</td>
+                <td>
+                  {job.password ? (
+                    <span>
+                      <input
+                        type={showPasswords[job._id] ? "text" : "password"}
+                        value={job.password}
+                        readOnly
+                        className="form-control form-control-sm d-inline w-auto"
+                      />
+                      <button
+                        className="btn btn-outline-secondary btn-sm ms-2"
+                        onClick={() => togglePasswordVisibility(job._id)}
+                      >
+                        {showPasswords[job._id] ? "🙈" : "👁️"}
+                      </button>
+                    </span>
                   ) : (
                     "N/A"
                   )}
