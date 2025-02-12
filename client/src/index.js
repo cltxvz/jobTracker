@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import AddJob from "./pages/AddJob";
 import EditJob from "./pages/EditJob";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -20,6 +22,8 @@ root.render(
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/add-job" element={<AddJob />} />
       <Route path="/edit-job/:id" element={<EditJob />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
   </Router>
 );

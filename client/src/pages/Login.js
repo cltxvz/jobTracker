@@ -1,38 +1,51 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post("http://localhost:5001/api/auth/login", { email, password });
       localStorage.setItem("token", res.data.token);
-      alert("Login successful!");
       navigate("/dashboard");
     } catch (error) {
-      console.error(error);
-      alert("Login failed. Check your credentials and try again.");
+      setMessage("Invalid credentials. Please try again.");
     }
   };
-  
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <a href="/register">Register</a></p>
+    <div className="d-flex flex-column min-vh-100">
+      <Header />
+      <div className="container mt-5 flex-grow-1">
+        <h2>🔑 Login</h2>
+        {message && <div className="alert alert-danger">{message}</div>}
+        <form onSubmit={handleLogin} className="mt-3">
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
+          <button type="submit" className="btn btn-success w-100">Login</button>
+        </form>
+        <div className="mt-3 text-center">
+          <a href="/forgot-password" className="text-decoration-none text-success">Forgot Password?</a>
+        </div>
+        <div className="mt-3 text-center">
+          <p>Don't have an account? <a href="/register" className="text-decoration-none text-success">Sign up here</a></p>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

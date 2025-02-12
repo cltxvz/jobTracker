@@ -29,5 +29,10 @@ app.use("/api/auth", authRoutes);
 const jobRoutes = require("./routes/jobRoutes");
 app.use("/api/jobs", jobRoutes);
 
+// Password Routes
+const passwordRoutes = require("./routes/passwordRoutes");
+app.use("/api/password", passwordRoutes);
+
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
