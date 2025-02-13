@@ -32,7 +32,8 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
-    const resetURL = `${process.env.CLIENT_URL}/reset-password/${token}`;
+    // ✅ FIXED: Use `resetToken` instead of `token`
+    const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     const mailOptions = {
       to: user.email,
       subject: "Password Reset Request",
