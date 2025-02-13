@@ -31,7 +31,7 @@ function EditJob() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs${id}`, job, {
+      await axios.put(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs/${id}`, job, {
         headers: { "x-auth-token": token },
       });
       alert("Job updated successfully!");
