@@ -41,6 +41,11 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+// Dummy route to wake up server
+app.get("/api/wakeup", (req, res) => {
+  res.status(200).send("Backend is awake!");
+});
+
 // Start Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
