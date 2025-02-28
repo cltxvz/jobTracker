@@ -97,10 +97,10 @@ By providing a **simple, structured, and intuitive** tracking system, JobTracker
 
 ## **📈 Ideas for Future Improvements:**  
 
-**Task Reminders & Notifications** – Get notified about follow-ups and deadlines.  
-**Custom Status Categories** – Allow users to define custom application statuses.  
-**Interview Tracking & Notes** – Save interview details and feedback.  
-**Multi-User Collaboration** – Shared job tracking for teams or career coaches.  
+- **Task Reminders & Notifications** – Get notified about follow-ups and deadlines.  
+- **Custom Status Categories** – Allow users to define custom application statuses.  
+- **Interview Tracking & Notes** – Save interview details and feedback.  
+- **Multi-User Collaboration** – Shared job tracking for teams or career coaches.  
 
 ---
 
@@ -110,12 +110,12 @@ By providing a **simple, structured, and intuitive** tracking system, JobTracker
 ```bash
 git clone https://github.com/cltxvz/jobTracker.git
 ```
-### **2️. Install Backend Dependencies:**  
+### **2. Install Backend Dependencies:**  
 ```bash
 cd jobTracker
 npm install
 ```
-### **3️. Set Up Environment Variables:**  
+### **3. Set Up Environment Variables:**  
 Create a `.env` file in the root directory and add:  
 ```env
 MONGO_URI=your-mongodb-atlas-connection-string
@@ -124,7 +124,7 @@ EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-email-password
 ```
 
-### **4️. Start the Backend Server:**  
+### **4. Start the Backend Server:**  
 ```bash
 npm start
 ```
@@ -133,7 +133,7 @@ or
 node server.js
 ```
 
-### **5️. Install & Run the Frontend:**  
+### **5. Install & Run the Frontend:**  
 ```bash
 cd client
 npm install
