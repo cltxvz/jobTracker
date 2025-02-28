@@ -32,7 +32,7 @@ function ForgotPassword() {
             <h2 className="fw-bold text-center">🔑 Forgot Your Password?</h2>
 
             {message && (
-              <div className={`alert ${error ? "alert-danger" : "alert-success"} text-center`}>
+              <div className={`alert ${error ? "alert-danger" : "alert-dark"} text-center`}>
                 {message}
               </div>
             )}

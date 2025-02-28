@@ -34,7 +34,11 @@ function EditJob() {
       await axios.put(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs/${id}`, job, {
         headers: { "x-auth-token": token },
       });
-      alert("Job updated successfully!");
+
+      // Store toast message for Dashboard to handle
+      localStorage.setItem("toastMessage", "Job updated successfully!");
+      localStorage.setItem("toastType", "success");
+
       navigate("/dashboard");
     } catch (error) {
       console.error(error);

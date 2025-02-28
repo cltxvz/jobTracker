@@ -12,8 +12,14 @@ function Dashboard() {
   const [sortField, setSortField] = useState("appliedDate");
   const [sortOrder, setSortOrder] = useState("desc");
   const [showPasswords, setShowPasswords] = useState({});
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const navigate = useNavigate();
+
+  // Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -37,6 +43,24 @@ function Dashboard() {
     fetchJobs();
   }, [navigate]);
 
+  // Retrieve stored toast message (from AddJob)
+  useEffect(() => {
+    const storedMessage = localStorage.getItem("toastMessage");
+    const storedType = localStorage.getItem("toastType");
+
+    if (storedMessage) {
+      setToastMessage(storedMessage);
+      setToastType(storedType || "success");
+
+      // Remove stored message after displaying
+      setTimeout(() => {
+        setToastMessage("");
+        localStorage.removeItem("toastMessage");
+        localStorage.removeItem("toastType");
+      }, 3000);
+    }
+  }, []);
+
   // Toggle Password Visibility
   const togglePasswordVisibility = (jobId) => {
     setShowPasswords((prev) => ({
@@ -45,21 +69,44 @@ function Dashboard() {
     }));
   };
 
+  // Open Delete Confirmation Modal
+  const openDeleteModal = (jobId) => {
+    setJobToDelete(jobId);
+    setShowModal(true);
+  };
+
+  // Close Modal Without Deleting
+  const closeDeleteModal = () => {
+    setJobToDelete(null);
+    setShowModal(false);
+  };
+
   // DELETE Job Function
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this job?");
-    if (!confirmDelete) return;
+  const handleDelete = async () => {
+    if (!jobToDelete) return;
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs${id}`, {
+      await axios.delete(`https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/jobs/${jobToDelete}`, {
         headers: { "x-auth-token": token },
       });
-      setJobs(jobs.filter((job) => job._id !== id));
+
+      setJobs(jobs.filter((job) => job._id !== jobToDelete));
+      setToastMessage("Job deleted successfully!");
+      setToastType("success");
     } catch (error) {
       console.error(error);
-      alert("Failed to delete job");
+      setToastMessage("Failed to delete job");
+      setToastType("error");
     }
+
+    // Close Modal and Reset State
+    setShowModal(false);
+    setJobToDelete(null);
+
+    setTimeout(() => {
+      setToastMessage("");
+    }, 3000);
   };
 
   // LOGOUT FUNCTION
@@ -204,7 +251,7 @@ function Dashboard() {
                   <td>{new Date(job.appliedDate).toLocaleDateString()}</td>
                   <td>
                     <button className="btn btn-warning btn-sm me-2" onClick={() => navigate(`/edit-job/${job._id}`)}>✏️ Edit</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(job._id)}>🗑️ Delete</button>
+                    <button className="btn btn-danger btn-sm" onClick={() => openDeleteModal(job._id)}>🗑️ Delete</button>
                   </td>
                 </tr>
               ))}
@@ -215,6 +262,51 @@ function Dashboard() {
         )}
       </div>
       <Footer />
+
+      {/* Delete Confirmation Modal */}
+      {showModal && (
+        <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Deletion</h5>
+                <button type="button" className="btn-close" onClick={closeDeleteModal}></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete this job?</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeDeleteModal}>Cancel</button>
+                <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification - Stays for 3 sec */}
+      {toastMessage && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: toastType === "success" ? "#4CAF50" : "#F44336",
+            color: "#fff",
+            padding: "12px 16px",
+            borderRadius: "5px",
+            boxShadow: "0px 2px 10px rgba(0,0,0,0.2)",
+            fontSize: "16px",
+            zIndex: 1000,
+            transition: "opacity 0.5s ease-in-out",
+            opacity: 1,
+          }}
+        >
+          {toastMessage}
+        </div>
+      )}
+
     </div>
   );
 }

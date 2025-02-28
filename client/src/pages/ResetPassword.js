@@ -29,7 +29,6 @@ function ResetPassword() {
         <div className="row justify-content-center">
           <div className="col-md-6">
             <h2 className="fw-bold text-center">🔒 Reset Password</h2>
-            <p className="text-muted text-center">Enter your new password below.</p>
 
             {message && <div className="alert alert-info text-center">{message}</div>}
 

@@ -24,7 +24,11 @@ function AddJob() {
         { company, position, jobLink, portalLink, username, password, status },
         { headers: { "x-auth-token": token } }
       );
-      alert("Job added successfully!");
+
+      // Store toast message for Dashboard to handle
+      localStorage.setItem("toastMessage", "Job added successfully!");
+      localStorage.setItem("toastType", "success");
+
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
