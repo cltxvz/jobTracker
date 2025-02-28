@@ -7,14 +7,19 @@ import Footer from "../components/Footer";
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous message
+    setError(false);
+
     try {
       const res = await axios.post("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/password/forgot-password", { email });
       setMessage(res.data.msg);
     } catch (error) {
       setMessage("Error sending reset link. Please try again.");
+      setError(true);
     }
   };
 
@@ -24,7 +29,13 @@ function ForgotPassword() {
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-md-6">
-            <h2 className="fw-bold text-center mb-4">🔑 Forgot Password?</h2>
+            <h2 className="fw-bold text-center">🔑 Forgot Your Password?</h2>
+
+            {message && (
+              <div className={`alert ${error ? "alert-danger" : "alert-success"} text-center`}>
+                {message}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="mt-4">
               <div className="mb-3">
@@ -41,8 +52,6 @@ function ForgotPassword() {
                 Send Reset Link
               </button>
             </form>
-
-            {message && <p className="mt-3 text-success text-center">{message}</p>}
 
             <div className="mt-3 text-center">
               <a href="/login" className="text-decoration-none text-success">← Back to Login</a>

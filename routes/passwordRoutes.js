@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 const router = express.Router();
 
-// 📩 FORGOT PASSWORD - Send Reset Email
+// FORGOT PASSWORD - Send Reset Email
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -25,14 +25,19 @@ router.post("/forgot-password", async (req, res) => {
 
     // Send reset email
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465, // Use 465 for SSL
+      secure: true, // Force SSL
       auth: {
-        user: process.env.EMAIL_USER, // Set this in .env
-        pass: process.env.EMAIL_PASS, // Set this in .env
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
-    });
+      tls: {
+        rejectUnauthorized: false, // Bypass self-signed certificate issues
+      },
+    }); 
 
-    // ✅ FIXED: Use `resetToken` instead of `token`
+    // Use `resetToken` instead of `token`
     const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     const mailOptions = {
       to: user.email,
@@ -49,7 +54,7 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// 🔑 RESET PASSWORD - Update Password
+// RESET PASSWORD - Update Password
 router.post("/reset-password/:token", async (req, res) => {
   try {
     const { token } = req.params;
