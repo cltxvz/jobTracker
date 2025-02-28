@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -20,20 +23,40 @@ function ResetPassword() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Reset Password</h2>
-      <form onSubmit={handleReset}>
-        <input
-          type="password"
-          className="form-control mb-3"
-          placeholder="Enter new password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-        <button type="submit" className="btn btn-success">Reset Password</button>
-      </form>
-      {message && <p className="mt-3">{message}</p>}
+    <div className="d-flex flex-column min-vh-100">
+      <Header />
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <h2 className="fw-bold text-center">🔒 Reset Password</h2>
+            <p className="text-muted text-center">Enter your new password below.</p>
+
+            {message && <div className="alert alert-info text-center">{message}</div>}
+
+            <form onSubmit={handleReset} className="mt-4">
+              <div className="mb-3">
+                <label className="form-label">New Password</label>
+                <input
+                  type="password"
+                  className="form-control form-control-lg text-center"
+                  placeholder="Enter new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-lg w-100" style={{ backgroundColor: "#198754", color: "#fff" }}>
+                Reset Password
+              </button>
+            </form>
+
+            <div className="mt-3 text-center">
+              <a href="/login" className="text-decoration-none text-success">← Back to Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

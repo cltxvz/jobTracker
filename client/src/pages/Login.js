@@ -1,6 +1,7 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -24,25 +25,49 @@ function Login() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
-      <div className="container mt-5 flex-grow-1">
-        <h2>🔑 Login</h2>
-        {message && <div className="alert alert-danger">{message}</div>}
-        <form onSubmit={handleLogin} className="mt-3">
-          <div className="mb-3">
-            <label className="form-label">Email</label>
-            <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <h2 className="fw-bold text-center">🔑 Login</h2>
+
+            {message && <div className="alert alert-danger text-center">{message}</div>}
+
+            <form onSubmit={handleLogin} className="mt-4">
+              <div className="mb-3">
+                <label className="form-label">Email Address</label>
+                <input
+                  type="email"
+                  className="form-control form-control-lg text-center"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-control form-control-lg text-center"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-lg w-100" style={{ backgroundColor: "#198754", color: "#fff" }}>
+                Login
+              </button>
+            </form>
+
+            <div className="mt-3 text-center">
+              <a href="/forgot-password" className="text-decoration-none text-success">Forgot Password?</a>
+            </div>
+
+            <div className="mt-3 text-center">
+              <p>Don't have an account? <a href="/register" className="text-decoration-none text-success">Sign up here</a></p>
+            </div>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-          <button type="submit" className="btn btn-success w-100">Login</button>
-        </form>
-        <div className="mt-3 text-center">
-          <a href="/forgot-password" className="text-decoration-none text-success">Forgot Password?</a>
-        </div>
-        <div className="mt-3 text-center">
-          <p>Don't have an account? <a href="/register" className="text-decoration-none text-success">Sign up here</a></p>
         </div>
       </div>
       <Footer />
