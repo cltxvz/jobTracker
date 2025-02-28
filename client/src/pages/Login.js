@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -9,13 +9,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
-  // Wake up backend when login page loads
-  useEffect(() => {
-    axios.get("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/wakeup")
-      .then(response => console.log("Backend woke up successfully!", response.data))
-      .catch(error => console.error("Error waking up backend:", error));
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
