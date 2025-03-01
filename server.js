@@ -20,11 +20,13 @@ mongoose
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
+const eventRoutes = require("./routes/eventsRoutes");
 
 // Use Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/password", passwordRoutes);
+app.use("/api/events", eventRoutes);
 
 // Serve React Frontend in Production
 if (process.env.NODE_ENV === "production") {

@@ -112,7 +112,7 @@ function Dashboard() {
   // LOGOUT FUNCTION
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
 
   // FILTER & SORT LOGIC
@@ -150,8 +150,9 @@ function Dashboard() {
 
         {/* Buttons: Add Job & Logout */}
         <div className="d-flex justify-content-center gap-4 mb-5">
-          <button className="btn btn-success" onClick={() => navigate("/add-job")}>➕ Add New Job</button>
-          <button className="btn btn-success" onClick={handleLogout}>🚪 Logout</button>
+          <button className="btn btn-light border-dark" onClick={() => navigate("/add-job")}>➕ Add New Job</button>
+          <button className="btn btn-light border-dark" onClick={() => navigate("/calendar")}>📅 Open Calendar</button>
+          <button className="btn btn-light border-dark" onClick={handleLogout}>🚪 Logout</button>
         </div>
 
         {/* Search & Filters */}

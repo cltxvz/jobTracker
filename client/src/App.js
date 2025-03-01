@@ -9,8 +9,6 @@ function App() {
   // Wake up backend on page load
   useEffect(() => {
     axios.get("https://jobtracker-backend-e1b2897187d2.herokuapp.com/api/wakeup")
-      .then(response => console.log("Backend woke up successfully!", response.data))
-      .catch(error => console.error("Error waking up backend:", error));
   }, []);
 
   return (
