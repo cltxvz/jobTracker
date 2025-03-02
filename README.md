@@ -1,6 +1,6 @@
 # **💼 JobTracker**  
 
-*"Your all-in-one tool to search, track, and manage your job applications efficiently!""*  
+*"Your all-in-one tool to search, track, and manage your job applications efficiently!"*  
 
 ---
 
