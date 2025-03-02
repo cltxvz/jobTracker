@@ -21,12 +21,14 @@ const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 const eventRoutes = require("./routes/eventsRoutes");
+const jobSearchRoutes = require("./routes/jobSearchRoutes");
 
 // Use Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/password", passwordRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/jobs-search", jobSearchRoutes);
 
 // Serve React Frontend in Production
 if (process.env.NODE_ENV === "production") {

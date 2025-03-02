@@ -10,7 +10,8 @@ import AddJob from "./pages/AddJob";
 import EditJob from "./pages/EditJob";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import CalendarPage from "./pages/Calendar"; 
+import CalendarPage from "./pages/Calendar";
+import JobSearch from "./pages/JobSearch"; 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -25,6 +26,7 @@ root.render(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/jobs-search" element={<JobSearch />} />
     </Routes>
   </Router>
 );

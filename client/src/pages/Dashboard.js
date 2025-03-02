@@ -148,9 +148,10 @@ function Dashboard() {
       <PageHeader />
       <div className="container mt-5 flex-grow-1">
 
-        {/* Buttons: Add Job & Logout */}
+        {/* Navigation Buttons */}
         <div className="d-flex justify-content-center gap-4 mb-5">
           <button className="btn btn-light border-dark" onClick={() => navigate("/add-job")}>➕ Add New Job</button>
+          <button className="btn btn-light border-dark" onClick={() => navigate("/jobs-search")}>🔎 Search Jobs</button>
           <button className="btn btn-light border-dark" onClick={() => navigate("/calendar")}>📅 Open Calendar</button>
           <button className="btn btn-light border-dark" onClick={handleLogout}>🚪 Logout</button>
         </div>
@@ -203,12 +204,23 @@ function Dashboard() {
             <tbody>
               {filteredJobs.map((job) => (
                 <tr key={job._id}>
-                  <td>{job.company}</td>
-                  <td>{job.position}</td>
+                  
+                  <td className="text-wrap text-break" style={{ maxWidth: "120px", wordBreak: "break-word" }}>
+                    {job.company}
+                  </td>
+
+                  <td className="text-wrap text-break" style={{ maxWidth: "120px", wordBreak: "break-word" }}>
+                    {job.position}
+                  </td>
+
                   <td>
-                    <span className={`badge bg-${job.status === "Rejected" ? "danger" : job.status === "Offer" ? "success" : "primary"}`}>
-                      {job.status}
-                    </span>
+                  <span 
+                    className={`badge bg-${job.status === "Rejected" ? "danger" : job.status === "Offer" ? "success" : "primary"} d-inline-block text-wrap text-center`} 
+                    style={{ maxWidth: "100px", whiteSpace: "normal" }}
+                  >
+                    {job.status}
+                  </span>
+
                   </td>
                   <td>
                     {job.jobLink ? (
@@ -228,7 +240,9 @@ function Dashboard() {
                       "N/A"
                     )}
                   </td>
-                  <td>{job.username ? job.username : "N/A"}</td>
+                  <td className="text-wrap text-break" style={{ maxWidth: "120px", wordBreak: "break-word" }}>
+                    {job.username ? job.username : "N/A"}
+                  </td>
                   <td>
                     {job.password ? (
                       <span>

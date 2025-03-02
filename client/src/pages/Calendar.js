@@ -153,6 +153,8 @@ function CalendarPage() {
           <button className="btn btn-light border-dark" onClick={() => navigate("/dashboard")}>🔙 Back to Dashboard</button>
         </div>
 
+        <p className="text-center">Click on a day to add/delete events!</p>
+
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
