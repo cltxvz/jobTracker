@@ -8,12 +8,12 @@
 
 JobTracker is a full-featured job search and tracking application designed to help job seekers stay organized and increase their efficiency during the job hunt. It eliminates the chaos of multiple job portals, lost application links, and missed deadlines by providing a centralized dashboard with the following features:
 
-✅ Search for jobs directly within the app using integrated APIs (Google Jobs & Adzuna).
-✅ Save job listings instantly from search results to your personal dashboard.
-✅ Add, edit, and delete job applications manually.
-✅ Track application progress (Applied, Interviewing, Offer, Rejected, etc.).
-✅ Use the built-in calendar to schedule deadlines, follow-ups, and interviews.
-✅ Sort and filter applications by company, date applied, and job status.
+- ✅ Search for jobs directly within the app using integrated APIs (Google Jobs & Adzuna).
+- ✅ Save job listings instantly from search results to your personal dashboard.
+- ✅ Add, edit, and delete job applications manually.
+- ✅ Track application progress (Applied, Interviewing, Offer, Rejected, etc.).
+- ✅ Use the built-in calendar to schedule deadlines, follow-ups, and interviews.
+- ✅ Sort and filter applications by company, date applied, and job status.
 
 Whether you're actively searching or tracking long-term applications, JobTracker makes the process organized, effortless, and stress-free!
 
