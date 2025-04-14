@@ -53,39 +53,46 @@ const fetchGoogleJobs = async (query, location) => {
 
 // Helper function to fetch jobs from Adzuna
 const fetchAdzunaJobs = async (query, location, page = 1, job_type = "") => {
-    try {
-      const response = await axios.get(`https://api.adzuna.com/v1/api/jobs/us/search/${page}`, {
-        params: {
-          app_id: ADZUNA_APP_ID,
-          app_key: ADZUNA_APP_KEY,
-          what: query,
-          where: location,
-          full_time: job_type === "fulltime" ? "1" : "",
-          part_time: job_type === "parttime" ? "1" : "",
-        },
-      });
-  
-      if (response.data.error) {
-        console.warn("Adzuna API limit reached.");
-        return { jobs: [], error: "Adzuna API Limit Reached" };
-      }
-  
-      const jobs = response.data.results.map((job) => ({
-        source: "Adzuna",
-        title: job.title,
-        company: job.company?.display_name || "Unknown",
-        location: job.location?.display_name || "Remote",
-        type: job.contract_type || "N/A",
-        link: job.redirect_url || "#", // Ensure correct job link is used
-      }));
-  
-      return { jobs };
-    } catch (error) {
-      console.error("Adzuna API Error:", error.message);
-      return { jobs: [], error: "Adzuna API Error" };
+  try {
+    const params = {
+      app_id: ADZUNA_APP_ID,
+      app_key: ADZUNA_APP_KEY,
+      what: query,
+      where: location,
+      page,
+    };
+
+    if (job_type === "parttime") {
+      params.part_time = "1";
+    } else if (job_type === "contract") {
+      params.contract_type = "contract";
     }
-  };
-  
+
+    const response = await axios.get(`https://api.adzuna.com/v1/api/jobs/us/search/${page}`, {
+      params,
+    });
+
+    if (response.data.error) {
+      console.warn("Adzuna API limit reached.");
+      return { jobs: [], error: "Adzuna API Limit Reached" };
+    }
+
+    const jobs = response.data.results.map((job) => ({
+      source: "Adzuna",
+      title: job.title,
+      company: job.company?.display_name || "Unknown",
+      location: job.location?.display_name || "Remote",
+      type: job.contract_type || "N/A",
+      link: job.redirect_url || "#",
+    }));
+
+    return { jobs };
+  } catch (error) {
+    console.error("Adzuna API Error:", error);
+    return { jobs: [], error: "Adzuna API Error" };
+  }
+};
+
 
 // Job Search API Endpoint
 router.get("/", async (req, res) => {

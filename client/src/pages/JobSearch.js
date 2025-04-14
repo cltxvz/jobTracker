@@ -38,7 +38,12 @@ function JobSearch() {
       });
 
       setJobs(res.data.jobs);
-      setError(res.data.errors ? res.data.errors.join(" | ") : "");
+
+      const filteredErrors = (res.data.errors || []).filter(
+        err => !err.toLowerCase().includes("error")
+      );
+      setError(filteredErrors.length ? filteredErrors.join(" | ") : "");
+      
       setPage(2);
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -59,7 +64,12 @@ function JobSearch() {
       });
 
       setJobs([...jobs, ...res.data.jobs]);
-      setError(res.data.errors ? res.data.errors.join(" | ") : "");
+
+      const filteredErrors = (res.data.errors || []).filter(
+        err => !err.toLowerCase().includes("error")
+      );
+      setError(filteredErrors.length ? filteredErrors.join(" | ") : "");
+      
       setPage(page + 1);
     } catch (error) {
       console.error("Error fetching more jobs:", error);
