@@ -69,7 +69,7 @@ function JobSearch() {
         err => !err.toLowerCase().includes("error")
       );
       setError(filteredErrors.length ? filteredErrors.join(" | ") : "");
-      
+
       setPage(page + 1);
     } catch (error) {
       console.error("Error fetching more jobs:", error);
@@ -172,7 +172,7 @@ function JobSearch() {
                     <h6 className="card-subtitle mb-2 text-muted">{job.company || "Unknown Company"}</h6>
                     <p className="card-text">
                       📍 <strong>{job.location || "Not specified"}</strong><br />
-                      🏢 <strong>{job.type || "Unknown type"}</strong> | 🔗 <strong>{job.source || "N/A"}</strong>
+                      🏢 <strong>{job.type || "Unknown type"}</strong>
                     </p>
                     <div className="d-flex gap-2">
                     <a
