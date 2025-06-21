@@ -14,11 +14,13 @@ function JobSearch() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [page, setPage] = useState(1);
+  const [adzunaPage, setAdzunaPage] = useState(1);
+  const [googleJobsNextPageToken, setGoogleJobsNextPageToken] = useState(null);
+  const [hasMoreJobs, setHasMoreJobs] = useState(true);
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
 
-  // Fetch Jobs from Backend
+  // Fetch Jobs from Backend (Initial Search)
   const handleSearch = async (e) => {
     e.preventDefault();
 
@@ -29,28 +31,44 @@ function JobSearch() {
 
     setLoading(true);
     setError("");
+    setJobs([]); // Clear previous jobs for a new search
+    setAdzunaPage(1); // Reset Adzuna page for new search
+    setGoogleJobsNextPageToken(null); // Reset Google Jobs token for new search
+    setHasMoreJobs(true); // Assume there are more jobs initially for a new search
 
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(`${API_BASE_URL}`, {
-        params: { query, location, job_type: jobType, page: 1 },
+        params: {
+          query,
+          location,
+          job_type: jobType,
+          adzunaPage: 1, // Start Adzuna at page 1
+          googleJobsNextPageToken: null, // No token for initial Google Jobs search
+        },
         headers: token ? { "x-auth-token": token } : {},
       });
 
-      setJobs(res.data.jobs);
+      // Safely access jobs and update state directly
+      const fetchedJobs = res.data?.jobs || []; // Ensure it's an array
+      setJobs(fetchedJobs);
 
-      const filteredErrors = (res.data.errors || []).filter(
-        err => !err.toLowerCase().includes("error")
+      // Directly update state using the setters
+      setAdzunaPage(res.data?.adzunaNextPage || 1);
+      setGoogleJobsNextPageToken(res.data?.googleJobsNextPageToken || null);
+      setHasMoreJobs(res.data?.hasMoreJobs ?? false);
+
+      const filteredErrors = (res.data?.errors || []).filter(
+        (err) => !err.toLowerCase().includes("error")
       );
       setError(filteredErrors.length ? filteredErrors.join(" | ") : "");
-      
-      setPage(2);
     } catch (error) {
       console.error("Error fetching jobs:", error);
       setError("Failed to fetch jobs. Please try again.");
+      setHasMoreJobs(false); // If an error, assume no more jobs
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   // Load More Jobs
@@ -59,45 +77,65 @@ function JobSearch() {
     setError("");
 
     try {
+      const token = localStorage.getItem("token");
+      console.log("Frontend: Token is present:", !!token);
+
       const res = await axios.get(`${API_BASE_URL}`, {
-        params: { query, location, job_type: jobType, page },
+        params: {
+          query,
+          location,
+          job_type: jobType,
+          adzunaPage, // Send the current Adzuna page number (from state)
+          googleJobsNextPageToken, // Send the current Google Jobs token (from state)
+        },
+        headers: token ? { "x-auth-token": token } : {},
       });
 
-      setJobs([...jobs, ...res.data.jobs]);
+      // Safely access new jobs and append them
+      const fetchedNewJobs = res.data?.jobs || []; // Ensure it's an array
+      setJobs((prevJobs) => [...prevJobs, ...fetchedNewJobs]); // Append new jobs
 
-      const filteredErrors = (res.data.errors || []).filter(
-        err => !err.toLowerCase().includes("error")
+      // Directly update state using the setters
+      setAdzunaPage(res.data?.adzunaNextPage || 1);
+      setGoogleJobsNextPageToken(res.data?.googleJobsNextPageToken || null);
+      setHasMoreJobs(res.data?.hasMoreJobs ?? false);
+
+      const filteredErrors = (res.data?.errors || []).filter(
+        (err) => !err.toLowerCase().includes("error")
       );
       setError(filteredErrors.length ? filteredErrors.join(" | ") : "");
-
-      setPage(page + 1);
     } catch (error) {
-      console.error("Error fetching more jobs:", error);
+      console.error("Frontend: Error fetching more jobs:", error);
       setError("Failed to load more jobs.");
+      setHasMoreJobs(false); // If an error, assume no more jobs
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   // Save Job to Dashboard
   const handleSaveJob = async (job) => {
-    if (!job.link || job.link === "#") { 
+    if (!job.link || job.link === "#") {
       setToastMessage("Error: No job link available.");
       setTimeout(() => setToastMessage(""), 3000);
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("token");
-      await axios.post(JOB_SAVE_URL, {
-        company: job.company || "Unknown",
-        position: job.title,
-        jobLink: job.link, // Ensure job link is stored correctly
-        status: "Pending",
-      }, {
-        headers: { "x-auth-token": token },
-      });
-  
+      await axios.post(
+        JOB_SAVE_URL,
+        {
+          company: job.company || "Unknown",
+          position: job.title,
+          jobLink: job.link,
+          status: "Pending",
+        },
+        {
+          headers: { "x-auth-token": token },
+        }
+      );
+
       setToastMessage("Job added successfully!");
       setTimeout(() => setToastMessage(""), 3000);
     } catch (error) {
@@ -106,16 +144,19 @@ function JobSearch() {
       setTimeout(() => setToastMessage(""), 3000);
     }
   };
-  
 
   return (
     <div className="d-flex flex-column min-vh-100">
       <SearchHeader />
       <div className="container mt-5 flex-grow-1">
-
         {/* Back Button */}
         <div className="text-center mb-5">
-          <button className="btn btn-light border-dark" onClick={() => navigate("/dashboard")}>🔙 Back to Dashboard</button>
+          <button
+            className="btn btn-light border-dark"
+            onClick={() => navigate("/dashboard")}
+          >
+            🔙 Back to Dashboard
+          </button>
         </div>
 
         {/* Error Message */}
@@ -144,7 +185,11 @@ function JobSearch() {
               />
             </div>
             <div className="col-md-3">
-              <select className="form-select" value={jobType} onChange={(e) => setJobType(e.target.value)}>
+              <select
+                className="form-select"
+                value={jobType}
+                onChange={(e) => setJobType(e.target.value)}
+              >
                 <option value="">Any Job Type</option>
                 <option value="fulltime">Full-Time</option>
                 <option value="parttime">Part-Time</option>
@@ -153,13 +198,19 @@ function JobSearch() {
               </select>
             </div>
             <div className="col-md-1">
-              <button type="submit" className="btn btn-success w-100">🔍</button>
+              <button type="submit" className="btn btn-success w-100">
+                🔍
+              </button>
             </div>
           </div>
         </form>
 
         {/* Loading Indicator */}
-        {loading && <div className="text-center mt-3"><strong>Loading jobs...</strong></div>}
+        {loading && (
+          <div className="text-center mt-3">
+            <strong>Loading jobs...</strong>
+          </div>
+        )}
 
         {/* Job Listings */}
         <div className="row mt-4">
@@ -169,21 +220,31 @@ function JobSearch() {
                 <div className="card shadow-sm">
                   <div className="card-body">
                     <h5 className="card-title">{job.title}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">{job.company || "Unknown Company"}</h6>
+                    <h6 className="card-subtitle mb-2 text-muted">
+                      {job.company || "Unknown Company"}
+                    </h6>
                     <p className="card-text">
-                      📍 <strong>{job.location || "Not specified"}</strong><br />
+                      📍 <strong>{job.location || "Not specified"}</strong>
+                      <br />
                       🏢 <strong>{job.type || "Unknown type"}</strong>
                     </p>
                     <div className="d-flex gap-2">
-                    <a
+                      <a
                         href={job.link || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`btn ${job.link && job.link !== "#" ? "btn-primary" : "btn-secondary disabled"}`}
-                        >
+                        className={`btn ${
+                          job.link && job.link !== "#"
+                            ? "btn-primary"
+                            : "btn-secondary disabled"
+                        }`}
+                      >
                         View Job Post
-                    </a>
-                      <button className="btn btn-success" onClick={() => handleSaveJob(job)}>
+                      </a>
+                      <button
+                        className="btn btn-success"
+                        onClick={() => handleSaveJob(job)}
+                      >
                         Save Job
                       </button>
                     </div>
@@ -192,25 +253,39 @@ function JobSearch() {
               </div>
             ))
           ) : (
-            !loading && <div className="text-center mt-3"><strong>No jobs found. Try a different search.</strong></div>
+            // Only show "No jobs found" if not loading and no jobs are present (initial state or empty search)
+            !loading && (
+              <div className="text-center mt-3">
+                <strong>No jobs found. Try a different search.</strong>
+              </div>
+            )
           )}
         </div>
 
-        {/* Load More Results */}
-        {jobs.length > 0 && (
+        {/* Load More Results button */}
+        {/* Only show button if there are jobs, not currently loading, and backend says there are more jobs */}
+        {jobs.length > 0 && !loading && hasMoreJobs && (
           <div className="text-center mt-4">
             <button
               className="btn btn-success"
               onClick={handleLoadMore}
-              disabled={loading}
-              style={{ backgroundColor: loading ? "#ccc" : "#28a745", cursor: loading ? "not-allowed" : "pointer", marginBottom:"50px" }}
+              disabled={loading} // Button is disabled while loading
+              style={{
+                backgroundColor: loading ? "#ccc" : "#28a745",
+                cursor: loading ? "not-allowed" : "pointer",
+                marginBottom: "50px",
+              }}
             >
-              {loading ? "Loading..." : "Load More Results"}
+              Load More Results
             </button>
           </div>
         )}
-
-        
+        {/* Message when no more jobs to load */}
+        {!hasMoreJobs && !loading && jobs.length > 0 && (
+          <div className="text-center mt-4 mb-4 text-muted">
+            No more jobs to load.
+          </div>
+        )}
       </div>
       <Footer />
 
