@@ -158,11 +158,6 @@ http://localhost:3000
 
 ---
 
-## **🌎 Live Demo (Hosted on Heroku)**  
-**JobTracker:** [https://jobtracker-frontend-32244539ef91.herokuapp.com](https://jobtracker-frontend-32244539ef91.herokuapp.com)  
-
----
-
 ## **👤 Author:**  
 **Carlos A. Cárdenas**  
 
